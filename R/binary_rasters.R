@@ -7,32 +7,31 @@
 #' @param y raster layers in a stack, brick or list
 #' @return A map, histogram and calculated area in km2
 #'
-binary_rasters <- function(x, y) { # x is list of raster, y is a vector
+binary_rasters <- function(x, y) { # x is list a raster, y is a vector
 
-   # unit testing and background checks
+  # unit testing and background checks
 
   if(class(y) != "numeric") {
     stop("Please provide a numeric input")
   }
 
-  # check  y is a list, else convert to a list and further check if
-  # if list list elements are raster layers
+ # check  x is a list, else convert to a list and further check if
+ # if list list elements are raster layers
 
-  if(class(x) != "list"){
-   x <- as.list(y)
+   if(class(x) != "list"){
+     x <- as.list(x)
 
-    for (i in seq_along(x)) {
-     if(class(x[[i]]) !=RasterLayer)
-     stop("elments of the list must be raster layers")
+     for (i in seq_along(x)) {
+       if(class(x[[i]]) !=RasterLayer)
+         stop("elments of the list must be raster layers")
+     }
    }
-  }
 
-  if (length(x) != length(y)) {
-    stop("`x` and `y` must be the same length", call. = FALSE)
-  }
- 
- # create classification matrix
-   
+   if (length(x) != length(y)) {
+     stop("`x` and `y` must be the same length", call. = FALSE)
+   }
+
+
   binary_list <- list()
   for (i in seq_along(y)) {
     binary_list[[i]] <- matrix(c(0, y[i], 0, y[i],1, 1),
@@ -64,7 +63,6 @@ binary_rasters <- function(x, y) { # x is list of raster, y is a vector
    print(
      paste("average area covered by species = ",round(avg_area, 2),"km2", sep="" ))
 }
-
 
 
 
