@@ -32,6 +32,7 @@ binary_rasters <- function(x, y) { # x is list of raster, y is a vector
   }
  
  # create classification matrix
+   
   binary_list <- list()
   for (i in seq_along(y)) {
     binary_list[[i]] <- matrix(c(0, y[i], 0, y[i],1, 1),
@@ -49,16 +50,21 @@ binary_rasters <- function(x, y) { # x is list of raster, y is a vector
 
   par(mfrow =c(1, 2))
 
-# pie chart
+  # map plot
+  plot(map_sum,
+       main= "species diversity map")
+
+  # pie chart
   lbls <- paste("species", 1:length(ras_area), sep="")
   pie(ras_area, lbls,
       main = "species by area (km2)",
       col = rainbow(length(ras_area)))
 
-  # map plot
-  plot(map_sum,
-       main= "species diversity map")
+  par(mfrow=c(1,1))
+   print(
+     paste("average area covered by species = ",round(avg_area, 2),"km2", sep="" ))
 }
+
 
 
 
