@@ -7,22 +7,22 @@
 #' @param y raster layers in a stack, brick or list
 #' @return A map, histogram and calculated area in km2
 #'
-binary_rasters <- function(x, y) { # x is a vector, y is a list of raster
+binary_rasters <- function(x, y) { # x is list of raster, y is a vector
 
    # unit testing and background checks
 
-  if(class(x) != "numeric") {
+  if(class(y) != "numeric") {
     stop("Please provide a numeric input")
   }
 
   # check  y is a list, else convert to a list and further check if
   # if list list elements are raster layers
 
-  if(class(y) != "list"){
-    y <- as.list(y)
+  if(class(x) != "list"){
+   x <- as.list(y)
 
-    for (i in seq_along(y)) {
-     if(class(y[[i]]) !=RasterLayer)
+    for (i in seq_along(x)) {
+     if(class(x[[i]]) !=RasterLayer)
      stop("elments of the list must be raster layers")
    }
   }
@@ -30,8 +30,8 @@ binary_rasters <- function(x, y) { # x is a vector, y is a list of raster
   if (length(x) != length(y)) {
     stop("`x` and `y` must be the same length", call. = FALSE)
   }
-
-
+ 
+ # create classification matrix
   binary_list <- list()
   for (i in seq_along(y)) {
     binary_list[[i]] <- matrix(c(0, y[i], 0, y[i],1, 1),
@@ -49,11 +49,12 @@ binary_rasters <- function(x, y) { # x is a vector, y is a list of raster
 
   par(mfrow =c(1, 2))
 
-  # histogram  plot
-  hist(ras_area, col="green",
-       main="varaibility in area covered by species",
-       text(x= 5000, y=1, paste("mean_area=", avg_area,"km2"),
-            cex = 1.5))
+# pie chart
+  lbls <- paste("species", 1:length(ras_area), sep="")
+  pie(ras_area, lbls,
+      main = "species by area (km2)",
+      col = rainbow(length(ras_area)))
+
   # map plot
   plot(map_sum,
        main= "species diversity map")
